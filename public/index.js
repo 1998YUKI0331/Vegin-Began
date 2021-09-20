@@ -222,7 +222,7 @@ function displayInfowindow(marker, title, address, phone) {
             '               <div class="ellipsis">' + address + '</div>' + 
             '               <div><span class="tel">' + phone + '</span></div>' +
             '               <div>' +
-            '                   <a href="#" onclick="displayPop()">비건 메뉴 보러가기</a>' +
+            '                   <a href="#" onclick="displayPop(\'' + marker + '\',\'' + title+ '\',\'' + address+ '\',\'' + phone + '\')">비건 메뉴 보러가기</a>' +
             '               </div>' +
             '           </div>' + 
             '       </div>' + 
@@ -238,15 +238,21 @@ function closeInfowindow() {
     infowindow.close(); 
 }
 
-function displayPop() {
+// 팝업 (메뉴 보기) 출력 함수
+function displayPop(marker, title, address, phone) {
     var popPositionDiv = document.getElementById('popPosition'); 
     popPositionDiv.style.display = "block"; // 숨겨진거 보이게
     var popBackgroundDiv = document.getElementById('popBackground'); 
     popBackgroundDiv.style.display = "block"; // 숨겨진거 보이게
 
-    popPositionDiv.innerHTML='<a href="#" onclick="clsoePop()">X</a>';
+    var content = 
+        '<div class="close" onclick="clsoePop()" title="닫기"></div>' +
+        '<div>'+ title +'</div>'
+
+    popPositionDiv.innerHTML = content;
 }
 
+// 팝업 (메뉴 보기) 닫는 함수
 function clsoePop() {
     var popPositionDiv = document.getElementById('popBackground'); 
     popPositionDiv.style.display = "none"; // 숨겨
@@ -259,7 +265,6 @@ function clsoePop() {
 function addLikeList(marker, title, address, phone) {
     if(!like_list.includes(phone)) { like_list.push(phone); } // 중복된 거 아니면 추가
     
-
     var message = like_list.length; // 잘 들어가는지 확인용
     var resultDiv = document.getElementById('result'); 
     resultDiv.innerHTML = message;

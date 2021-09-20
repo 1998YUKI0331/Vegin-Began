@@ -7,6 +7,7 @@
 #menu_wrap .option{text-align: center;}
 #menu_wrap .option p {margin:10px 0;}  
 #menu_wrap .option button {margin-left:5px;}
+
 #placesList li {list-style: none;}
 #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
 #placesList .item span {display: block;margin-top:4px;}
@@ -31,9 +32,11 @@
 #placesList .item .marker_13 {background-position: 0 -562px;}
 #placesList .item .marker_14 {background-position: 0 -608px;}
 #placesList .item .marker_15 {background-position: 0 -654px;}
+
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
 .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
 .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
 .info .close:hover {cursor: pointer;}
@@ -41,11 +44,14 @@
 .info .like:hover {cursor: pointer;}
 .info .body {position: relative;overflow: hidden;}
 .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+
 .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+
 .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
 .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
 .info .link {color: #5085BB;}
+
 .custom_typecontrol {position:absolute;top:10px;right:10px;overflow:hidden;width:130px;height:30px;margin:0;padding:0;z-index:1;font-size:12px;font-family:'Malgun Gothic', '맑은 고딕', sans-serif;}
 .custom_typecontrol span {display:block;width:65px;height:30px;float:left;text-align:center;line-height:30px;cursor:pointer;}
 .custom_typecontrol .btn {background:#fff;background:linear-gradient(#fff,  #e6e6e6);}       
@@ -54,32 +60,7 @@
 .custom_typecontrol .selected_btn {color:#fff;background:#425470;background:linear-gradient(#425470, #5b6d8a);}
 .custom_typecontrol .selected_btn:hover {color:#fff;}
 
-#popPosition {
-    background-color: #fff;
-    position:absolute;
-    height: 400px;
-    width: 600px;
-    margin: -200px 0px 0px -300px;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-    display: none;
-}
-
-#popBackground {
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index: 2;
-  display: none;
-  background:rgba(0,0,0,0.7);
-}
-
-#popPosition .close{
-  position:absolute;
-  top:10px;
-  right:10px;
-  cursor:pointer;
-}
+#popBackground {position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; display:none; background:rgba(0,0,0,0.5);}
+#popPosition {background-color:#fff; position:absolute; height:400px; width:600px; margin:-200px 0px 0px -300px; top:50%; left:50%; z-index:1; display:none;}
+#popPosition .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+#popPosition .close:hover {cursor: pointer;}
