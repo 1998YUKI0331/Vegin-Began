@@ -9,19 +9,14 @@ var db = mongoose.connect('mongodb://yuki:1234@localhost:27017/yuki', (err) => {
   else { console.log('Succesfully Connected!'); }
 });
 
-var UserSchema = new mongoose.Schema({
-  username: String, //아이디
-	password: String, //비밀번호
-});
-
-var Users = mongoose.model('users', UserSchema);
+const Users = require('./models/User');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({imit: '1gb', extended : true}));
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/"));
 
-app.get("/", (req, res) => { res.sendFile(__dirname + "/index.html"); });
+app.get("/", (req, res) => { res.sendFile(__dirname + "/public/index.html"); });
 app.get("/login", (req, res) => { res.sendFile(__dirname + "/public/login.html"); });
 app.get("/signup", (req, res) => { res.sendFile(__dirname + "/public/signup.html"); });
 
