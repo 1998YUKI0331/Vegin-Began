@@ -3,6 +3,8 @@ var like_list = []; // 찜 목록 추가
 var like_idx = 0;
 var global_maptype = '';
 
+var searchbool = false;
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
         center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
@@ -23,14 +25,12 @@ searchPlaces();
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
-
     var keyword = document.getElementById('keyword').value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         //alert('키워드를 입력해주세요!');
         return false;
     }
-    keyword += "비건";
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch(keyword, placesSearchCB); 
@@ -265,11 +265,6 @@ function clsoePop() {
 // 내가 좋아하는 식당 추가하는 함수
 function addLikeList(marker, title, address, phone) {
     if(!like_list.includes(phone)) { like_list.push(phone); } // 중복된 거 아니면 추가
-    
-    var message = like_list.length; // 잘 들어가는지 확인용
-    var resultDiv = document.getElementById('result'); 
-    resultDiv.innerHTML = message;
-
     displayInfowindow(marker, title, address, phone);
 }
 
@@ -279,10 +274,6 @@ function deleteLikeList(marker, title, address, phone) {
     if (index > -1) {
         like_list.splice(index, 1);
     }
-
-    var message = like_list.length; // 잘 빠지는지 확인용
-    var resultDiv = document.getElementById('result'); 
-    resultDiv.innerHTML = message;
 
     if (global_maptype === 'skyview') setMapType();
     displayInfowindow(marker, title, address, phone);
@@ -385,4 +376,19 @@ function placesSearchCB2(data, status, pagination) {
         return;
 
     }
+}
+
+function searchTgl() {
+    if (searchbool === false) {
+        document.getElementById('menu_wrap').style.display = 'block';
+        searchbool = true;
+    }
+    else if (searchbool === true) {
+        document.getElementById('menu_wrap').style.display = 'none';
+        searchbool = false;
+    }
+}
+
+function loginPage() {
+    location.href="/login";
 }

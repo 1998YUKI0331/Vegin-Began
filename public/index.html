@@ -3,11 +3,20 @@
 <head>
     <meta charset="utf-8">
     <title>냐냐냥</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/index.css">
 </head>
 <body>
+
+<div style="width:100%; height:50px; background:#bacaca; margin-bottom:6px; display:flex; align-items:center">
+    <div style="position:relative; left:2%"><h2>Your Began Map</h2></div>
+    <div id="searchTgl" onclick="loginPage()" style="position:relative; left:60%">🙋‍♀️ Login</div>
+    <div id="LoginTgl" onclick="searchTgl()" style="position:relative; left:62%">🔎 Search</div>
+    <div id="ShareTgl" style="position:relative; left:64%">📷 Share</div>
+    <div id="ContactTgl" style="position:relative; left:66%">📞 Contact</div>
+</div>
+
 <div class="map_wrap">
-    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <div id="map" style="width:100%; height:600px; position:relative; overflow:hidden;"></div>
 
     <!-- 지도타입 컨트롤 div / 이 식당은 하늘이에요.. 뭐 이런-->
     <div class="custom_typecontrol radius_border">
@@ -15,11 +24,11 @@
         <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">내꺼</span>
     </div>
 
-    <div id="menu_wrap" class="bg_white">
+    <div id="menu_wrap" class="bg_white" style="display:none;">
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="이태원" id="keyword" size="15"> 
+                    키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15"> 
                     <button type="submit">검색하기</button> 
                 </form>
             </div>
@@ -28,14 +37,16 @@
         <ul id="placesList"></ul>
         <div id="pagination"></div>
     </div>
-</div> <br>
-<p id="result"></p> <!-- like 잘 들어가는지 확인하려고 -->
+</div>
+
 
 <div id="popBackground" class="popBackground"> <!-- 팝업창 -->
 <div id="popPosition" class="popPosition"> 
 </div>
 
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=edcd3f117657acc449c5e16721364cd3&libraries=services"></script>
 <script src="/index.js"></script>
+<script src="/js/html2canvas.js"></script>
 </body>
 </html>
