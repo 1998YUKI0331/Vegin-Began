@@ -392,3 +392,7 @@ function searchTgl() {
 function loginPage() {
     location.href="/login";
 }
+
+function signupPage() {
+    location.href="/signup";
+}

@@ -1,25 +1,47 @@
-// 기본 설정
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 const PORT = 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : true}));
-
-// 정적 파일 불러오기
-app.use(express.static(__dirname + "/public"));
-
-// 라우팅 정의
-app.get("/", (req, res) => { res.sendFile(__dirname + "/index.html"); });
-app.get("/login", (req, res) => { res.sendFile(__dirname + "/public/login.html"); });
-
-app.post("/login", (req, res) => { 
-  console.log(req.body.username);                                                                    
-  res.send("<h1>WELCOME<h1>");
+var db = mongoose.connect('mongodb://yuki:1234@localhost:27017/yuki', (err) => {
+	if (err) { console.log(err.message); } 
+  else { console.log('Succesfully Connected!'); }
 });
 
-// 서버 실행
+var UserSchema = new mongoose.Schema({
+  username: String, //아이디
+	password: String, //비밀번호
+});
+
+var Users = mongoose.model('users', UserSchema);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({imit: '1gb', extended : true}));
+
+app.use(express.static(__dirname + "/public"));
+
+app.get("/", (req, res) => { res.sendFile(__dirname + "/index.html"); });
+app.get("/login", (req, res) => { res.sendFile(__dirname + "/public/login.html"); });
+app.get("/signup", (req, res) => { res.sendFile(__dirname + "/public/signup.html"); });
+
+app.post('/signup', (req, res) => {
+	var new_user = new Users(req.body);
+
+	new_user.save((err) => {
+		if (err) return res.status(500).json({ message: '저장 실패!' });
+		else return res.status(200).json({ message: '저장 성공!', data: new_user });
+	});
+});
+
+app.post("/login", (req, res) => { 
+  Users.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
+		if (err) return res.status(500).json({ message: '에러!' });
+		else if (user) return res.status(200).json({ message: '유저 찾음!', data: user });
+		else return res.status(404).json({ message: '유저 없음!' });
+	});
+});
+
 app.listen(PORT, () => {
   console.log(`Listen : ${PORT}`);
 });
