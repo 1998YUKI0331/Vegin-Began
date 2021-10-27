@@ -23,24 +23,24 @@ app.set('views', __dirname + '\\views');
 app.set('view engine','ejs');
 
 app.use(session({
-    secret: 'yuki0331',
-    resave: false,
-    saveUninitialized: true,
-    store : new FileStore()
+	secret: 'yuki0331',
+	resave: false,
+	saveUninitialized: true,
+	store : new FileStore()
 }));
 
 app.get("/", (req, res) => { 
 	console.log(req.session);
 	if(req.session.is_logined == true) {
-    	res.render('index', { is_logined: req.session.is_logined, username: req.session.username });
-    } else{ res.render('index',{ is_logined: false });
-    }
+		res.render('index', { is_logined: req.session.is_logined, username: req.session.username });
+	} else{ res.render('index',{ is_logined: false });
+	}
  });
 app.get("/signup", (req, res) => { res.render('signup'); });
 app.get("/login", (req, res) => { res.render('login'); });
 app.get('/logout',(req,res)=>{ req.session.destroy(function(err){ 
 	res.redirect('/'); 
-}); });
+});});
 
 app.post('/signup', (req, res) => {
 	var new_user = new Users(req.body);
@@ -54,23 +54,22 @@ app.post('/signup', (req, res) => {
 });
 
 app.post("/login", (req, res) => { 
-  Users.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
+	Users.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
 		if (err) return res.status(500).json({ message: '에러!' });
 		else if (user) {
 			req.session.is_logined = true;
-            req.session.username = req.body.username;
-            req.session.password = req.body.password;
+			req.session.username = req.body.username;
+			req.session.password = req.body.password;
 			req.session.save(function(){ 
-                res.render('index', { // 로그인 정보 전달
-					username: req.body.username, password: req.body.password,
-                    is_logined : true
-                });
-            });
+			res.render('index', { // 로그인 정보 전달
+					username: req.body.username,
+					password: req.body.password,
+					is_logined : true
+				});
+			});
 		}
 		else return res.status(404).json({ message: '유저 없음!' });
 	});
 });
 
-app.listen(PORT, () => {
-  console.log(`Listen : ${PORT}`);
-});
+app.listen(PORT, () => { console.log(`Listen : ${PORT}`); });
