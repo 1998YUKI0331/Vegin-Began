@@ -396,3 +396,7 @@ function loginPage() {
 function signupPage() {
     location.href="/signup";
 }
+
+function logoutPage() {
+    location.href="/logout";
+}
