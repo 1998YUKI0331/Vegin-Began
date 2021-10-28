@@ -5,6 +5,18 @@ var global_maptype = '';
 
 var searchbool = false;
 
+$.ajax({
+    type: 'POST',
+    url: '/like',
+    data: { 'username': document.getElementById('username').innerText },
+    dataType: 'json',
+    success: function (data) {
+        for ( var i=0; i<Object.keys(data).length; i++ ) {
+            like_list.push(data[i]);
+        }
+    }
+})
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
         center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
@@ -264,16 +276,39 @@ function clsoePop() {
 
 // 내가 좋아하는 식당 추가하는 함수
 function addLikeList(marker, title, address, phone) {
-    if(!like_list.includes(phone)) { like_list.push(phone); } // 중복된 거 아니면 추가
+    $.ajax({
+        type: 'POST',
+        url: '/like/add',
+        data: { 
+            'username': document.getElementById('username').innerText, 
+            'phone': phone
+        },
+        dataType: 'json',
+        success: function (data) {
+            for ( var i=0; i<Object.keys(data).length; i++ ) {
+                like_list.push(data[i]);
+            }
+        }
+    })
     displayInfowindow(marker, title, address, phone);
 }
 
 // 내가 좋아하는 식당 삭제하는 함수
 function deleteLikeList(marker, title, address, phone) {
-    var index = like_list.indexOf(phone);
-    if (index > -1) {
-        like_list.splice(index, 1);
-    }
+    $.ajax({
+        type: 'POST',
+        url: '/like/delete',
+        data: { 
+            'username': document.getElementById('username').innerText, 
+            'phone': phone
+        },
+        dataType: 'json',
+        success: function (data) {
+            for ( var i=0; i<Object.keys(data).length; i++ ) {
+                like_list.push(data[i]);
+            }
+        }
+    })
 
     if (global_maptype === 'skyview') setMapType();
     displayInfowindow(marker, title, address, phone);
@@ -302,13 +337,22 @@ function setMapType(maptype) {
         global_maptype = 'roadmap';
     } 
     else {
-        like_idx=0;
-        for ( var i=0; i<like_list.length; i++ ) {
-            searchPlaces2(like_list[i]);
-        }
-        skyviewControl.className = 'selected_btn';
-        roadmapControl.className = 'btn';
-        global_maptype = 'skyview';
+        $.ajax({
+            type: 'POST',
+            url: '/like',
+            data: { 'username': document.getElementById('username').innerText },
+            dataType: 'json',
+            success: function (data) {
+                like_idx=0;
+                for ( var i=0; i<Object.keys(data).length; i++ ) {
+                    like_list.push(data[i]);
+                    searchPlaces2(data[i]);
+                }
+                skyviewControl.className = 'selected_btn';
+                roadmapControl.className = 'btn';
+                global_maptype = 'skyview';
+            }
+        })
     }
 }
 
@@ -399,4 +443,10 @@ function signupPage() {
 
 function logoutPage() {
     location.href="/logout";
+}
+
+function shareSNS() {
+    var sendText = "제 지도 공유해요!";
+    var sendUrl = "http://localhost:3000/";
+    window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
 }

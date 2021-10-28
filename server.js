@@ -16,7 +16,7 @@ var db = mongoose.connect('mongodb://yuki:1234@localhost:27017/yuki', (err) => {
 const Users = require('./models/User');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({imit: '1gb', extended : true}));
+app.use(bodyParser.urlencoded({extended : false}));
 app.use(express.static(path.join(__dirname + "/public")));
 
 app.set('views', __dirname + '\\views');
@@ -38,9 +38,7 @@ app.get("/", (req, res) => {
  });
 app.get("/signup", (req, res) => { res.render('signup'); });
 app.get("/login", (req, res) => { res.render('login'); });
-app.get('/logout',(req,res)=>{ req.session.destroy(function(err){ 
-	res.redirect('/'); 
-});});
+app.get('/logout',(req, res) => { req.session.destroy(function(err){ res.redirect('/'); });});
 
 app.post('/signup', (req, res) => {
 	var new_user = new Users(req.body);
@@ -69,6 +67,32 @@ app.post("/login", (req, res) => {
 			});
 		}
 		else return res.status(404).json({ message: '유저 없음!' });
+	});
+});
+
+app.post('/like', (req, res) => {
+	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
+		res.send(user.likeList);
+ 	});
+});
+
+app.post('/like/add', async (req, res) => {
+	await Users.findOneAndUpdate(
+		{ username: req.body.username },
+		{ $addToSet : {likeList: req.body.phone }})
+		.exec();
+	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
+		res.send(user.likeList);
+	});
+});
+
+app.post('/like/delete', async (req, res) => {
+	await Users.findOneAndUpdate(
+		{ username: req.body.username },
+		{ $pull : {likeList: req.body.phone }})
+		.exec();
+	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
+		res.send(user.likeList);
 	});
 });
 

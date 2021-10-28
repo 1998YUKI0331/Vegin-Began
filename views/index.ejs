@@ -13,11 +13,12 @@
         <div onclick="loginPage()" style="position:absolute; right:445px;">💁‍♀️ Login</div>
         <div onclick="signupPage()" style="position:absolute; right:335px;">🙋‍♀️ Signup</div> 
     <% }else{ %>
-        <div style="position:absolute; left:250px;"><%= username %> 님 환영합니다!</div>
+        <div id="username" style="position:absolute; left:250px;"><%= username %></div>
+        <div style="position:absolute; left:290px;"> 님 환영합니다!</div>
         <div onclick="logoutPage()"style="position:absolute; right:335px;">💁‍♀️ Logout</div> 
     <% } %>
     <div id="searchTgl" onclick="searchTgl()" style="position:absolute; right:233px;">🔎 Search</div>
-    <div id="ShareTgl" style="position:absolute; right:139px;">📷 Share</div>
+    <div id="ShareTgl" onclick="shareSNS()" style="position:absolute; right:139px;">📷 Share</div>
     <div id="ContactTgl" style="position:absolute; right:35px;">📞 Contact</div>
 </div>
 
@@ -25,10 +26,13 @@
     <div id="map" style="width:100%; height:600px; position:relative; overflow:hidden;"></div>
 
     <!-- 지도타입 컨트롤 div / 이 식당은 하늘이에요.. 뭐 이런-->
-    <div class="custom_typecontrol radius_border">
-        <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
-        <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">내꺼</span>
-    </div>
+    <% if(is_logined == false){ %>
+    <% }else{ %>
+        <div class="custom_typecontrol radius_border">
+            <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+            <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">내꺼</span>
+        </div>
+    <% } %>
 
     <div id="menu_wrap" class="bg_white" style="display:none;">
         <div class="option">
@@ -46,12 +50,11 @@
 </div>
 
 
-<div id="popBackground" class="popBackground"> <!-- 팝업창 -->
-<div id="popPosition" class="popPosition"> 
-</div>
-
+<div id="popBackground" class="popBackground"></div> <!-- 팝업창 -->
+<div id="popPosition" class="popPosition"></div> 
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=edcd3f117657acc449c5e16721364cd3&libraries=services"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="index.js"></script>
 </body>
 </html>
