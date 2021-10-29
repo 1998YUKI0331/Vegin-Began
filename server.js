@@ -7,7 +7,12 @@ const session = require('express-session');
 const crypto = require('crypto');
 const FileStore = require('session-file-store')(session); // 세션을 파일에 저장
 const cookieParser = require('cookie-parser');
+const xlsx = require('xlsx');
 const PORT = 3000;
+
+const excelFile = xlsx.readFile('datas/서울시 채식 음식점 현황관리 리스트_202110291941.xlsx');
+const sheetName = excelFile.SheetNames[0];      // 첫번째 시트 정보 추출
+const firstSheet = excelFile.Sheets[sheetName]; // 시트의 제목 추출
 
 var db = mongoose.connect('mongodb://yuki:1234@localhost:27017/yuki', (err) => {
 	if (err) { console.log(err.message); } 
@@ -29,7 +34,7 @@ app.use(session({
 	store : new FileStore()
 }));
 
-app.get("/", (req, res) => { 
+app.get("/", (req, res) => {
 	console.log(req.session);
 	if(req.session.is_logined == true) {
 		res.render('index', { is_logined: req.session.is_logined, username: req.session.username });
@@ -68,6 +73,22 @@ app.post("/login", (req, res) => {
 		}
 		else return res.status(404).json({ message: '유저 없음!' });
 	});
+});
+
+app.post('/vegan', (req, res) => {
+	var Vegan = new Array();
+
+	for (var i = 2; i < 974; i++) {
+		var col = "D" + String(i);
+		if (firstSheet[col].v !== "") {
+			var data = new Object();
+			data.phone = firstSheet[col].v;
+			Vegan.push(data);
+		}
+	}
+	
+	var jsonData = JSON.stringify(Vegan);
+	res.send(jsonData);
 });
 
 app.post('/like', (req, res) => {
