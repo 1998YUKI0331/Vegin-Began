@@ -91,6 +91,23 @@ app.post('/vegan', (req, res) => {
 	res.send(jsonData);
 });
 
+app.post('/vegan/menu', (req, res) => {
+	var Vegan = new Array();
+
+	for (var i = 2; i < 974; i++) {
+		var colPhone = "D" + String(i);
+		var colMenu = "G" + String(i);
+		if (firstSheet[colPhone].v == req.body.phone) {
+			var data = new Object();
+			data.menu = firstSheet[colMenu].v;
+			Vegan.push(data);
+		}
+	}
+	
+	var jsonData = JSON.stringify(Vegan);
+	res.send(jsonData);
+});
+
 app.post('/like', (req, res) => {
 	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
 		res.send(user.likeList);

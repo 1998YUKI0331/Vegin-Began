@@ -2,6 +2,8 @@ var markers = []; // 지도에 표시된 마커 객체를 가지고 있을 배�
 var vegan_list = [];
 var like_list = [];
 var global_maptype = '';
+var imageSrc = "images/marker2.png";
+var searchflag = false; // 사용자 검색이면 true
 
 $.ajax({
     type: 'POST',
@@ -32,14 +34,20 @@ if (document.getElementById('username').innerText != "null") {
 var mapContainer = document.getElementById('map'),
     mapOption = { 
         center: new kakao.maps.LatLng(37.5524979951415, 126.989316855952),
-        level: 7
+        level: 8
     };
 
-var map = new kakao.maps.Map(mapContainer, mapOption); //지도 생성
-var ps = new kakao.maps.services.Places(); //장소 검색 객체
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+var ps = new kakao.maps.services.Places(); // 장소 검색 객체
 
-for ( var i=0; i<vegan_list.length / 10; i++ ) { //너무 오래 걸려서 일단 조금만
+for ( var i=0; i<vegan_list.length / 10; i++ ) { // 너무 오래 걸려서 일단 조금만
     searchPlaces(vegan_list[i]);
+}
+
+function search() { // 사용자가 직접 검색하는 함수
+    var keyword = document.getElementById("keyword").value;
+    searchflag = true;
+    searchPlaces(keyword);
 }
 
 function searchPlaces(keyword) {
@@ -51,15 +59,15 @@ function placesSearchCB(data, status, pagination) { // 장소검색 완료 때 �
         displayPlaces(data); // 정상적으로 검색되면 마커 표출
     } 
     
-/*    else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+    else if (searchflag == true && status === kakao.maps.services.Status.ZERO_RESULT) {
         alert('검색 결과가 존재하지 않습니다.');
         return;
     } 
     
-    else if (status === kakao.maps.services.Status.ERROR) {
+    else if (searchflag == true && status === kakao.maps.services.Status.ERROR) {
         alert('검색 결과 중 오류가 발생했습니다.');
         return;
-    }*/
+    }
 }
 
 function displayPlaces(places) {
@@ -83,11 +91,38 @@ function displayPlaces(places) {
         });
     })(marker, places[0].place_name, places[0].road_address_name, places[0].phone);
 
-    // map.setBounds(bounds); // 검색된 장소 위치를 기준으로 지도 범위를 재설정
+    if (searchflag == true && vegan_list.includes(places[0].phone)) {
+        map.setBounds(bounds); // 검색된 장소 위치를 기준으로 지도 범위를 재설정
+        searchflag = false;
+
+        var result = document.getElementById("result");
+        
+        $.ajax({
+            type: 'POST',
+            url: '/vegan/menu',
+            data: { 'phone': places[0].phone },
+            dataType: 'json',
+            success: function (data) {
+                var menuString = data[0].menu;
+                var menuSplit = menuString.split(', ');
+                for (var i in menuSplit) {
+                    result.innerHTML += '<p>' + menuSplit[i] + '</p>';
+                }
+            }
+        })
+    }
+    else if (!vegan_list.includes(places[0].phone)) {
+        alert("Vegin Began에 등록되지 않은 식당입니다.");
+    }
 }
 
 function addMarker(position) {
-    var marker = new kakao.maps.Marker({ map: map, position: position });
+    var imageSize = new kakao.maps.Size(27, 35);    
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+    var marker = new kakao.maps.Marker({ 
+        map: map, 
+        position: position,
+        image : markerImage });
     marker.setMap(map);
     markers.push(marker);
 
@@ -128,9 +163,6 @@ function displayCustomOverlay(marker, title, address, phone) {
             '           <div class="desc">' + 
             '               <div class="ellipsis">' + address + '</div>' + 
             '               <div><span class="tel">' + phone + '</span></div>' +
-            '               <div>' +
-            '                   <a href="#" onclick="displayPop(\'' + marker + '\',\'' + title+ '\',\'' + address+ '\',\'' + phone + '\')">비건 메뉴 보러가기</a>' +
-            '               </div>' +
             '           </div>' + 
             '       </div>' + 
             '   </div>' +    
@@ -201,7 +233,7 @@ function setMapType(maptype) {
 
     if (maptype === 'roadmap') {
         map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-        for ( var i=0; i<vegan_list.length / 10; i++ ) {
+        for ( var i=0; i<vegan_list.length / 5; i++ ) { // 로드하는데 오래 걸려서 일단 일부만
             searchPlaces(vegan_list[i]);
         }
         roadmapControl.className = 'selected_btn';
@@ -244,4 +276,14 @@ function shareSNS() {
     var sendText = "제 지도 공유해요!";
     var sendUrl = "http://localhost:3000/";
     window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
+}
+
+function displayPop() {
+    var popPositionDiv = document.getElementById('popPosition'); 
+    popPositionDiv.style.display = "block"; // 숨겨진거 보이게
+}
+
+function clsoePop() {
+    var popPositionDiv = document.getElementById('popPosition'); 
+    popPositionDiv.style.display = "none"; // 숨겨
 }
