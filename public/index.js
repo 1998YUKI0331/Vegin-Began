@@ -34,18 +34,21 @@ if (document.getElementById('username').innerText != "null") {
 var mapContainer = document.getElementById('map'),
     mapOption = { 
         center: new kakao.maps.LatLng(37.5524979951415, 126.989316855952),
-        level: 8
+        level: 7
     };
 
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 var ps = new kakao.maps.services.Places(); // 장소 검색 객체
 
-for ( var i=0; i<vegan_list.length / 10; i++ ) { // 너무 오래 걸려서 일단 조금만
+for ( var i=0; i<vegan_list.length; i++ ) {
     searchPlaces(vegan_list[i]);
 }
 
 function search() { // 사용자가 직접 검색하는 함수
     var keyword = document.getElementById("keyword").value;
+    var result = document.getElementById("result");
+    result.innerHTML = "";
+
     searchflag = true;
     searchPlaces(keyword);
 }
@@ -111,13 +114,13 @@ function displayPlaces(places) {
             }
         })
     }
-    else if (!vegan_list.includes(places[0].phone)) {
+    else if (searchflag == true && !vegan_list.includes(places[0].phone)) {
         alert("Vegin Began에 등록되지 않은 식당입니다.");
     }
 }
 
 function addMarker(position) {
-    var imageSize = new kakao.maps.Size(27, 35);    
+    var imageSize = new kakao.maps.Size(20, 27);    
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
     var marker = new kakao.maps.Marker({ 
         map: map, 
@@ -233,7 +236,7 @@ function setMapType(maptype) {
 
     if (maptype === 'roadmap') {
         map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-        for ( var i=0; i<vegan_list.length / 5; i++ ) { // 로드하는데 오래 걸려서 일단 일부만
+        for ( var i=0; i<vegan_list.length; i++ ) {
             searchPlaces(vegan_list[i]);
         }
         roadmapControl.className = 'selected_btn';
