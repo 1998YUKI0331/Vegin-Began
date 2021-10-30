@@ -263,6 +263,10 @@ function setMapType(maptype) {
     }
 }
 
+function homePage() {
+    location.href="/";
+}
+
 function loginPage() {
     location.href="/login";
 }
@@ -275,10 +279,12 @@ function logoutPage() {
     location.href="/logout";
 }
 
-function shareSNS() {
-    var sendText = "제 지도 공유해요!";
-    var sendUrl = "http://localhost:3000/";
-    window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
+function boardPage() {
+    location.href="/board";
+}
+
+function contactPage() {
+    location.href="https://github.com/1998YUKI0331/toy-project-repository";
 }
 
 function displayPop() {

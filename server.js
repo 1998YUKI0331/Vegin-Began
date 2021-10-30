@@ -19,6 +19,7 @@ var db = mongoose.connect('mongodb://yuki:1234@localhost:27017/yuki', (err) => {
   	else { console.log('Succesfully Connected!'); }
 });
 const Users = require('./models/User');
+const Boards = require('./models/Board');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}));
@@ -44,7 +45,13 @@ app.get("/", (req, res) => {
 app.get("/signup", (req, res) => { res.render('signup'); });
 app.get("/login", (req, res) => { res.render('login'); });
 app.get('/logout',(req, res) => { req.session.destroy(function(err){ res.redirect('/'); });});
-
+app.get("/board", (req, res) => { 
+	if(req.session.is_logined == true) {
+		res.render('board', { is_logined: req.session.is_logined, username: req.session.username });
+	} else{ res.render('board',{ is_logined: false });
+	}
+ });
+ 
 app.post('/signup', (req, res) => {
 	var new_user = new Users(req.body);
 
@@ -131,6 +138,43 @@ app.post('/like/delete', async (req, res) => {
 		.exec();
 	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
 		res.send(user.likeList);
+	});
+});
+
+app.post('/board', async (req, res) => {
+	Boards.find().exec(function(err,board){
+		res.send(board);
+	});
+});
+
+app.post('/board/content', async (req, res) => {
+	Boards.findOne({ title: req.body.title }).exec(function(err,board){
+		res.send(board);
+ 	});
+});
+
+app.post('/board/add', async (req, res) => {
+	await Boards.insertMany({
+		id: req.body.id,
+		title: req.body.title,
+		content: req.body.content,
+		date: req.body.date,
+		writer: req.body.writer,
+		tag: req.body.tag
+	}, function(err, res) {
+		if (err) throw err;
+	});
+	Boards.find().exec(function(err,board){
+		res.send(board);
+	});
+});
+
+app.post('/board/delete', (req, res) => {
+	Boards.deleteOne({id : req.body.id}, function(err, res) {
+		if (err) throw err;
+	});
+	Boards.find().exec(function(err,board){
+		res.send(board);
 	});
 });
 

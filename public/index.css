@@ -38,9 +38,9 @@ ul{/*list-style-type: none;*/ margin: 0; padding: 0; background-color: #333; tex
 li{/*position: relative;*/ display: inline-block;}
 li div{color: #FFFFFF; text-align: center; padding: 14.5px 16px; text-decoration: none;}
 li div:hover{/*color: #597812;*/ color: #bacaca; font-weight:normal;}
-.menu {width: 5000px; height: 55px; text-align: center; max-width: 100%; background-position: center; background-size: cover; background-color: #333333;color: white; position: absolute;}
+.menu {width: 5000px; height: 55px; text-align: center; max-width: 100%; background-position: center; background-size: cover; background-color: #333333;color: white; position: absolute; z-index:1;}
 
-#popPosition {background-color: #ffffff; background-color: rgba( 255, 255, 255, 0.8 ); border-radius:10px; box-shadow: 5px 5px 5px grey; position:absolute; width:350px; margin:-300px 0px 0px -350px; top:50%; left:50%; z-index:1; display:none;}
+#popPosition {background-color: #ffffff; background-color: rgba( 255, 255, 255, 0.8 ); border-radius:10px; box-shadow: 5px 5px 5px grey; position:absolute; width:350px; margin:-300px 0px 0px -270px; top:50%; left:50%; z-index:1; display:none;}
 #popPosition .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
 #popPosition .close:hover {cursor: pointer;}
 

@@ -9,6 +9,7 @@
 <div class="menu">
     <nav class="clearfix">
         <ul class="clearfix">
+            <li><div id="homeTgl" onclick="homePage()">Home</div></li>
             <% if(is_logined == false){ %>
                 <li><div id="username" style="display:none;">null</div></li>
                 <li><div onclick="loginPage()">Signin</div></li>
@@ -19,8 +20,8 @@
                 <li><div onclick="logoutPage()">Signout</div></li>
             <% } %>
             <li><div id="searchTgl" onclick="displayPop()">Search</div></li>
-            <li><div id="ShareTgl" onclick="shareSNS()">Board</div></li>
-            <li><div id="ContactTgl">Contact</div></li>
+            <li><div id="ShareTgl" onclick="boardPage()">Board</div></li>
+            <li><div id="ContactTgl" onclick="contactPage()">Contact</div></li>
         </ul>
         <a id="pull" href="#"></a>
     </nav>
