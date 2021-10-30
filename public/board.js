@@ -1,5 +1,3 @@
-var global_index = 0;
-
 loadBoard();
 
 function loadBoard() {
@@ -14,6 +12,7 @@ function loadBoard() {
             for ( var i=Object.keys(data).length-1; i>=0; i-- ) {
                 tablebody.innerHTML += 
                     '<tbody><tr>' +
+                        '<td name="id" style="display:none;">' + data[i]._id + '</td>' +
                         '<td>' + i + '</td>' +
                         '<td>' + data[i].tag + '</td>' +
                         '<td name="title">' + data[i].title + '</td>' +
@@ -21,28 +20,16 @@ function loadBoard() {
                         '<td>' + data[i].date + '</td>' +
                     '</tr></tbody>';
             }
-            global_index = Object.keys(data).length;
         }
     })
 }
-console.log(global_index);
 
 var title = document.getElementsByName('title');
+var id = document.getElementsByName('id');
 var index = 0;
 for ( var i=0; i<title.length; i++ ) (function(ln) {
     title[ln].addEventListener('click', function(event){
-        // console.log(title[ln].innerText);
-
-        $.ajax({
-            type: 'POST',
-            url: '/board/content',
-            dataType: 'json',
-            data: { 'title': title[ln].innerText },
-            async: false,
-            success: function (data) {
-                console.log(data);
-            }
-        })        
+        location.href="/content?" + id[ln].innerText;     
     });
     index++;
 })(index);
@@ -75,7 +62,7 @@ function submitBoard() {
             type: 'POST',
             url: '/board/add',
             dataType: 'json',
-            data: { 'id':global_index, 'title':newtitle, 'content':content, 'date':date, 'writer':writer, 'tag':tag },
+            data: { 'id':Math.floor(Math.random() * 10000000), 'title':newtitle, 'content':content, 'date':date, 'writer':writer, 'tag':tag },
             async: false,
             success: function (data) {
                 clsoePop();

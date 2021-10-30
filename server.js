@@ -51,6 +51,12 @@ app.get("/board", (req, res) => {
 	} else{ res.render('board',{ is_logined: false });
 	}
  });
+ app.get("/content", (req, res) => { 
+	if(req.session.is_logined == true) {
+		res.render('content', { is_logined: req.session.is_logined, username: req.session.username });
+	} else{ res.render('content',{ is_logined: false });
+	}
+ });
  
 app.post('/signup', (req, res) => {
 	var new_user = new Users(req.body);
@@ -148,7 +154,7 @@ app.post('/board', async (req, res) => {
 });
 
 app.post('/board/content', async (req, res) => {
-	Boards.findOne({ title: req.body.title }).exec(function(err,board){
+	Boards.findOne({ _id: req.body._id }).exec(function(err,board){
 		res.send(board);
  	});
 });
@@ -170,10 +176,20 @@ app.post('/board/add', async (req, res) => {
 });
 
 app.post('/board/delete', (req, res) => {
-	Boards.deleteOne({id : req.body.id}, function(err, res) {
+	Boards.deleteOne({ _id: req.body._id }, function(err, res) {
 		if (err) throw err;
 	});
 	Boards.find().exec(function(err,board){
+		res.send(board);
+	});
+});
+
+app.post('/board/edit', async (req, res) => {
+	await Boards.findOneAndUpdate(
+		{ _id: req.body._id },
+		{ title: req.body.title, content:req.body.content })
+		.exec();
+	Boards.findOne({ _id: req.body._id  }).exec(function(err,board){
 		res.send(board);
 	});
 });

@@ -29,22 +29,33 @@
 </div>
 
 <div style="width:100%; height:622px; position:absolute; top:55px;">
-    <section class="article-list table-common con" style="margin-top:50px;">
-        <table id="tablebody" border="1">
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>태그</th>
+    <section class="article-detail table-common con row" style="margin-top:50px;">
+        <div class="article-writer cell">
+            <div class="writer-icon"></div>
+            <span id="writer">작성자</span>
+        </div>
+        <table class="cell" border="1">
+            <colgroup>
+                <col width="100px">
+            </colgroup>
+            <tbody>
+                <tr class="article-title">
                     <th>제목</th>
-                    <th>작성자</th>
-                    <th>날짜</th>
+                    <td id="title" colspan="3" contenteditable="true"></td>
                 </tr>
-            </thead>
+                <tr class="article-info">
+                    <th>날짜</th>
+                    <td id="date"></td>
+                    <th>태그</th>
+                    <td id="tag"></td>
+                </tr>
+                <tr class="article-body">
+                    <td colspan="4" id="content" contenteditable="true"></td>
+                </tr>
+            </tbody>
         </table>
-        <% if(is_logined == false){ %>
-        <% }else{ %>
-            <button id="write" onclick="writeBoard()" style="float:right; margin-top:15px; font-size:16px; height:30px;">write</button>
-        <% } %>
+        <button id="delete" style="float:right; margin:15px; font-size:16px; height:30px; display:none;">delete</button>
+        <button id="edit" style="float:right; margin:15px; font-size:16px; height:30px; display:none;">edit</button>
     </section>
 </div>
 
@@ -52,25 +63,7 @@
     <div style="margin:15px;">당신의 비건 지도, Vegin Began</div>
 </div>
 
-<div id="popBack" class="popBack"> <!-- 팝업창 -->
-<div id="popPosi" class="popPosi">
-    <div class="close" onclick="clsoePop()" title="닫기"></div>
-    <div style="margin:50px 35px 35px 35px;">
-        <div class="row">
-            제목 <textarea id="title" style="width:100%; margin-bottom:20px;"></textarea>
-            내용 <textarea id="content" style="width:100%; height:200px; margin-bottom:20px;"></textarea>
-            태그 <select id="tag" name="tag">
-                <option value="글 분류 선택">글 분류 선택</option>
-                <option value="자유">자유</option>
-                <option value="비건 레시피">비건 레시피</option>
-                <option value="식당 리뷰">식당 리뷰</option>
-            </select>
-            <button id="submit" onclick="submitBoard()" style="float:right; margin-top:15px; font-size:16px; height:30px;">submit</button>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="board.js"></script>
+<script src="content.js"></script>
 </body>
 </html>
