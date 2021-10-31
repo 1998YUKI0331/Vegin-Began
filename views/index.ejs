@@ -29,7 +29,27 @@
 
 <div style="width:100%; position:absolute; top:55px;">
     <div id="map" style="width:100%; height:622px; position:relative; overflow:hidden;"></div>
-
+    <button id="themebtn" style="position:absolute; left:10px; top:10px; font-size:16px; width:45px; height:45px; z-index:1; background:#333333;">
+        ▶
+    </button>
+    한식, 양식, 인도/중동, 분식, 일식, 중식, 동남아, 카페, 베이커리,  술집
+    <div id="popTheme" class="popTheme" style="position:absolute; left:10px; top:65px;">
+        <select id="theme" name="theme" style="width:200px; margin-top:15px;">
+            <option value="">테마 선택</option>
+            <option value="All">All</option>
+            <option value="한식">한식</option>
+            <option value="양식">양식</option>
+            <option value="인도/중동">인도/중동</option>
+            <option value="분식">분식</option>            
+            <option value="일식">일식</option>
+            <option value="중식">중식</option>            
+            <option value="동남아">동남아</option>
+            <option value="카페">카페</option>            
+            <option value="베이커리">베이커리</option>
+            <option value="술집">술집</option>            
+        </select>
+    </div>    
+    
     <!-- 지도타입 컨트롤 div / 이 식당은 하늘이에요.. 뭐 이런-->
     <% if(is_logined == false){ %>
     <% }else{ %>

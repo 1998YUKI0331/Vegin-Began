@@ -104,6 +104,23 @@ app.post('/vegan', (req, res) => {
 	res.send(jsonData);
 });
 
+app.post('/vegan/theme', (req, res) => {
+	var Vegan = new Array();
+
+	for (var i = 2; i < 974; i++) {
+		var colPhone = "D" + String(i);
+		var colTheme = "C" + String(i);
+		if (firstSheet[colTheme].v == req.body.theme) {
+			var data = new Object();
+			data.phone = firstSheet[colPhone].v;
+			Vegan.push(data);
+		}
+	}
+	
+	var jsonData = JSON.stringify(Vegan);
+	res.send(jsonData);
+});
+
 app.post('/vegan/menu', (req, res) => {
 	var Vegan = new Array();
 
@@ -149,6 +166,12 @@ app.post('/like/delete', async (req, res) => {
 
 app.post('/board', async (req, res) => {
 	Boards.find().exec(function(err,board){
+		res.send(board);
+	});
+});
+
+app.post('/board/tag', async (req, res) => {
+	Boards.find({ tag: req.body.tag }).exec(function(err,board){
 		res.send(board);
 	});
 });

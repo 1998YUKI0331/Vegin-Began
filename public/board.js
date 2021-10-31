@@ -1,6 +1,22 @@
-loadBoard();
+loadAllBoard();
 
-function loadBoard() {
+function loadBoard(data) {
+    var tablebody = document.getElementById('tablebody');
+    tablebody.innerHTML = "<thead><tr><th>번호</th><th>태그</th><th>제목</th><th>작성자</th><th>날짜</th></tr></thead>";
+    for ( var i=Object.keys(data).length-1; i>=0; i-- ) {
+        tablebody.innerHTML += 
+            '<tbody><tr>' +
+                '<td name="id" style="display:none;">' + data[i]._id + '</td>' +
+                '<td>' + i + '</td>' +
+                '<td>' + data[i].tag + '</td>' +
+                '<td name="title">' + data[i].title + '</td>' +
+                '<td>' + data[i].writer + '</td>' +
+                '<td>' + data[i].date + '</td>' +
+            '</tr></tbody>';
+    }
+}
+
+function loadAllBoard() {
     var tablebody = document.getElementById('tablebody');
     $.ajax({
         type: 'POST',
@@ -8,21 +24,57 @@ function loadBoard() {
         dataType: 'json',
         async: false,
         success: function (data) {
-            tablebody.innerHTML = "<thead><tr><th>번호</th><th>태그</th><th>제목</th><th>작성자</th><th>날짜</th></tr></thead>";
-            for ( var i=Object.keys(data).length-1; i>=0; i-- ) {
-                tablebody.innerHTML += 
-                    '<tbody><tr>' +
-                        '<td name="id" style="display:none;">' + data[i]._id + '</td>' +
-                        '<td>' + i + '</td>' +
-                        '<td>' + data[i].tag + '</td>' +
-                        '<td name="title">' + data[i].title + '</td>' +
-                        '<td>' + data[i].writer + '</td>' +
-                        '<td>' + data[i].date + '</td>' +
-                    '</tr></tbody>';
-            }
+            loadBoard(data);
         }
     })
 }
+
+var allbtn = document.getElementById('allbtn');
+allbtn.addEventListener('click', function(event){
+    loadAllBoard();
+});
+
+var freebtn = document.getElementById('freebtn');
+freebtn.addEventListener('click', function(event){
+    $.ajax({
+        type: 'POST',
+        url: '/board/tag',
+        dataType: 'json',
+        data: { 'tag': "자유" },
+        async: false,
+        success: function (data) {
+            loadBoard(data);
+        }
+    })
+});
+
+var recipebtn = document.getElementById('recipebtn');
+recipebtn.addEventListener('click', function(event){
+    $.ajax({
+        type: 'POST',
+        url: '/board/tag',
+        dataType: 'json',
+        data: { 'tag': "비건 레시피" },
+        async: false,
+        success: function (data) {
+            loadBoard(data);
+        }
+    })
+});
+
+var reviewbtn = document.getElementById('reviewbtn');
+reviewbtn.addEventListener('click', function(event){
+    $.ajax({
+        type: 'POST',
+        url: '/board/tag',
+        dataType: 'json',
+        data: { 'tag': "식당 리뷰" },
+        async: false,
+        success: function (data) {
+            loadBoard(data);
+        }
+    })
+});
 
 var title = document.getElementsByName('title');
 var id = document.getElementsByName('id');

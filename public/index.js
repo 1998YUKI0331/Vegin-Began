@@ -17,6 +17,34 @@ $.ajax({
     }
 })
 
+var themebtn = document.getElementById('themebtn');
+themebtn.addEventListener('click', function(event){
+    var themediv = document.getElementById('theme');
+    var theme = themediv.options[themediv.selectedIndex].value;
+    if (theme == "All") {
+        removeMarker();
+        for ( var i=0; i<vegan_list.length; i++ ) {
+            searchPlaces(vegan_list[i]);
+        }
+    }
+    else {
+        removeMarker();
+        $.ajax({
+            type: 'POST',
+            url: '/vegan/theme',
+            dataType: 'json',
+            data: { 'theme': theme },
+            async: false,
+            success: function (data) {
+                for ( var i=0; i<Object.keys(data).length; i++ ) {
+                    console.log(data[i].phone);
+                    searchPlaces(data[i].phone);
+                }
+            }
+        })
+    }
+});
+
 if (document.getElementById('username').innerText != "null") {
     $.ajax({
         type: 'POST',

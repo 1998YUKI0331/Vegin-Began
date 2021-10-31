@@ -44,4 +44,6 @@ li div:hover{/*color: #597812;*/ color: #bacaca; font-weight:normal;}
 #popPosition .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
 #popPosition .close:hover {cursor: pointer;}
 
+#popTheme {background-color: #ffffff; background-color: rgba( 255, 255, 255, 0.8 ); border-radius:10px; box-shadow: 5px 5px 5px grey; position:absolute; height:50px; width:230px; text-align:center; z-index:1; display:block;}
+
 button {background-color: #8aa1a1; border:none; color:white; border-radius:5px; width:100px; height:24px;}
