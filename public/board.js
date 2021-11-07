@@ -1,5 +1,27 @@
 loadAllBoard();
 
+var title = document.getElementsByName('title');
+var id = document.getElementsByName('id');
+var index = 0;
+for ( var i=0; i<title.length; i++ ) (function(ln) {
+    title[ln].addEventListener('click', function(event){
+        location.href="/content?" + id[ln].innerText;     
+    });
+    index++;
+})(index);
+
+function clickContent() {
+    var title = document.getElementsByName('title');
+    var id = document.getElementsByName('id');
+    var index = 0;
+    for ( var i=0; i<title.length; i++ ) (function(ln) {
+        title[ln].addEventListener('click', function(event){
+            location.href="/content?" + id[ln].innerText;     
+        });
+        index++;
+    })(index);
+}
+
 function loadBoard(data) {
     var tablebody = document.getElementById('tablebody');
     tablebody.innerHTML = "<thead><tr><th>번호</th><th>태그</th><th>제목</th><th>작성자</th><th>날짜</th></tr></thead>";
@@ -14,6 +36,7 @@ function loadBoard(data) {
                 '<td>' + data[i].date + '</td>' +
             '</tr></tbody>';
     }
+    clickContent();
 }
 
 function loadAllBoard() {
@@ -27,6 +50,7 @@ function loadAllBoard() {
             loadBoard(data);
         }
     })
+    clickContent();
 }
 
 var allbtn = document.getElementById('allbtn');
@@ -76,16 +100,6 @@ reviewbtn.addEventListener('click', function(event){
     })
 });
 
-var title = document.getElementsByName('title');
-var id = document.getElementsByName('id');
-var index = 0;
-for ( var i=0; i<title.length; i++ ) (function(ln) {
-    title[ln].addEventListener('click', function(event){
-        location.href="/content?" + id[ln].innerText;     
-    });
-    index++;
-})(index);
-
 function writeBoard() {
     document.getElementById('popBack').style.display = 'block';
     document.getElementById('popPosi').style.display = 'block';
@@ -125,7 +139,7 @@ function submitBoard() {
     else {
         alert("항목을 모두 입력해주세요!");
     }
-    
+    loadAllBoard();
 }
 
 function homePage() {

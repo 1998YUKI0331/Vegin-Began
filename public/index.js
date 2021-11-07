@@ -4,6 +4,7 @@ var like_list = [];
 var global_maptype = '';
 var imageSrc = "images/marker2.png";
 var searchflag = false; // 사용자 검색이면 true
+var cur_theme = ""; // 현재 선택되어 있는 테마
 
 $.ajax({
     type: 'POST',
@@ -17,32 +18,36 @@ $.ajax({
     }
 })
 
-var themebtn = document.getElementById('themebtn');
-themebtn.addEventListener('click', function(event){
-    var themediv = document.getElementById('theme');
+var themediv = document.getElementById('theme');
+themediv.addEventListener('click', function(event){
     var theme = themediv.options[themediv.selectedIndex].value;
-    if (theme == "All") {
-        removeMarker();
-        for ( var i=0; i<vegan_list.length; i++ ) {
-            searchPlaces(vegan_list[i]);
+    if (cur_theme !== theme) {
+        if (theme == "All") {
+            cur_theme = theme;
+            removeMarker();
+            for ( var i=0; i<vegan_list.length; i++ ) {
+                searchPlaces(vegan_list[i]);
+            }
+        }
+        else if (theme == "한식" || theme == "양식" || theme == "인도/중동" || theme == "분식" || theme == "일식" || 
+                 theme == "중식" || theme == "동남아" || theme == "카페" || theme == "베이커리" || theme == "술집") {
+            cur_theme = theme;
+            removeMarker();
+            $.ajax({
+                type: 'POST',
+                url: '/vegan/theme',
+                dataType: 'json',
+                data: { 'theme': theme },
+                async: false,
+                success: function (data) {
+                    for ( var i=0; i<Object.keys(data).length; i++ ) {
+                        searchPlaces(data[i].phone);
+                    }
+                }
+            })
         }
     }
-    else {
-        removeMarker();
-        $.ajax({
-            type: 'POST',
-            url: '/vegan/theme',
-            dataType: 'json',
-            data: { 'theme': theme },
-            async: false,
-            success: function (data) {
-                for ( var i=0; i<Object.keys(data).length; i++ ) {
-                    console.log(data[i].phone);
-                    searchPlaces(data[i].phone);
-                }
-            }
-        })
-    }
+    console.log(theme);
 });
 
 if (document.getElementById('username').innerText != "null") {
