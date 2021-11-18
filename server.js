@@ -7,19 +7,13 @@ const session = require('express-session');
 const crypto = require('crypto'); // 유저 비밀번호 암호화
 const FileStore = require('session-file-store')(session); // 세션을 파일에 저장
 const cookieParser = require('cookie-parser');
-const xlsx = require('xlsx');
 const PORT = 3000;
-
-const excelFile = xlsx.readFile('datas/서울시 채식 음식점 현황관리 리스트_202110291941.xlsx');
-const sheetName = excelFile.SheetNames[0];      // 첫번째 시트 정보 추출
-const firstSheet = excelFile.Sheets[sheetName]; // 시트의 제목 추출
 
 var db = mongoose.connect('mongodb://yuki:1234@localhost:27017/yuki', (err) => {
 	if (err) { console.log(err.message); } 
   	else { console.log('Succesfully Connected!'); }
 });
 const Users = require('./models/User');
-const Boards = require('./models/Board');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}));
@@ -28,8 +22,16 @@ app.use(express.static(path.join(__dirname + "/public")));
 app.set('views', __dirname + '\\views');
 app.set('view engine','ejs');
 
+const BoardRouter = require('./routes/BoardRouter');
+const LikeRouter = require('./routes/LikeRouter');
+const VeganRouter = require('./routes/VeganRouter');
+
+app.use('/board', BoardRouter);
+app.use('/like', LikeRouter);
+app.use('/vegan', VeganRouter);
+
 app.use(session({
-	secret: 'yuki0331',
+	secret: 'secretcode',
 	resave: false,
 	saveUninitialized: true,
 	store : new FileStore()
@@ -96,135 +98,6 @@ app.post("/login", (req, res) => {
 			});
 		}
 		else return res.status(404).json({ message: '유저 없음!' });
-	});
-});
-
-app.post('/vegan', (req, res) => {
-	var Vegan = new Array();
-
-	for (var i = 2; i < 974; i++) {
-		var col = "D" + String(i);
-		if (firstSheet[col].v !== "") {
-			var data = new Object();
-			data.phone = firstSheet[col].v;
-			Vegan.push(data);
-		}
-	}
-	
-	var jsonData = JSON.stringify(Vegan);
-	res.send(jsonData);
-});
-
-app.post('/vegan/theme', (req, res) => {
-	var Vegan = new Array();
-
-	for (var i = 2; i < 974; i++) {
-		var colPhone = "D" + String(i);
-		var colTheme = "C" + String(i);
-		if (firstSheet[colTheme].v == req.body.theme) {
-			var data = new Object();
-			data.phone = firstSheet[colPhone].v;
-			Vegan.push(data);
-		}
-	}
-	
-	var jsonData = JSON.stringify(Vegan);
-	res.send(jsonData);
-});
-
-app.post('/vegan/menu', (req, res) => {
-	var Vegan = new Array();
-
-	for (var i = 2; i < 974; i++) {
-		var colPhone = "D" + String(i);
-		var colMenu = "G" + String(i);
-		if (firstSheet[colPhone].v == req.body.phone) {
-			var data = new Object();
-			data.menu = firstSheet[colMenu].v;
-			Vegan.push(data);
-		}
-	}
-	
-	var jsonData = JSON.stringify(Vegan);
-	res.send(jsonData);
-});
-
-app.post('/like', (req, res) => {
-	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
-		res.send(user.likeList);
- 	});
-});
-
-app.post('/like/add', async (req, res) => {
-	await Users.findOneAndUpdate(
-		{ username: req.body.username },
-		{ $addToSet : {likeList: req.body.phone }})
-		.exec();
-	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
-		res.send(user.likeList);
-	});
-});
-
-app.post('/like/delete', async (req, res) => {
-	await Users.findOneAndUpdate(
-		{ username: req.body.username },
-		{ $pull : {likeList: req.body.phone }})
-		.exec();
-	Users.findOne({ username: req.body.username }).select('likeList').exec(function(err,user){
-		res.send(user.likeList);
-	});
-});
-
-app.post('/board', async (req, res) => {
-	Boards.find().exec(function(err,board){
-		res.send(board);
-	});
-});
-
-app.post('/board/tag', async (req, res) => {
-	Boards.find({ tag: req.body.tag }).exec(function(err,board){
-		res.send(board);
-	});
-});
-
-app.post('/board/content', async (req, res) => {
-	Boards.findOne({ _id: req.body._id }).exec(function(err,board){
-		res.send(board);
- 	});
-});
-
-app.post('/board/add', async (req, res) => {
-	await Boards.insertMany({
-		id: req.body.id,
-		title: req.body.title,
-		content: req.body.content,
-		date: req.body.date,
-		writer: req.body.writer,
-		tag: req.body.tag
-	}, function(err, res) {
-		if (err) throw err;
-	});
-	Boards.find().exec(function(err,board){
-		res.send(board);
-	});
-});
-
-app.post('/board/delete', (req, res) => {
-	Boards.deleteOne({ _id: req.body._id }, function(err, res) {
-		if (err) throw err;
-	});
-	Boards.find().exec(function(err,board){
-		res.send(board);
-	});
-});
-
-app.post('/board/edit', async (req, res) => {
-	await Boards.findOneAndUpdate(
-		{ _id: req.body._id },
-		{ title: req.body.title, content:req.body.content })
-		.exec();
-	Boards.findOne({ _id: req.body._id  }).exec(function(err,board){
-		res.send(board);
 	});
 });
 
